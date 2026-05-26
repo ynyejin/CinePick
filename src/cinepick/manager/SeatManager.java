@@ -139,4 +139,15 @@ public class SeatManager {
 
         System.out.println();
     }
+
+    // 특정 상영 정보에서 좌석 번호로 좌석 검색
+    public Seat findSeatByScreeningIdAndSeatNumber(int screeningId, String seatNumber) {
+        for (Seat seat : seats) {
+            if (seat.getScreeningId() == screeningId &&
+                    seat.getSeatNumber().equalsIgnoreCase(seatNumber)) {
+                return seat;
+            }
+        }
+        return null;
+    }
 }
