@@ -1,0 +1,2 @@
+admin|1234|관리자|0|ADMIN
+yyj|000|yyj|100|USER

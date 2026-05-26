@@ -27,3 +27,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Project data temporary files ###
+data/*.tmp
+data/*.bak

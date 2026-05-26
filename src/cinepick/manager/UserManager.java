@@ -72,4 +72,9 @@ public class UserManager {
             System.out.println(user);
         }
     }
+
+    public void replaceUsers(ArrayList<User> loadedUsers) {
+        users.clear();
+        users.addAll(loadedUsers);
+    }
 }

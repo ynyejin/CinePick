@@ -79,4 +79,16 @@ public class MovieManager {
             System.out.println(movie);
         }
     }
+
+    public void replaceMovies(ArrayList<Movie> loadedMovies) {
+        movies.clear();
+        movies.addAll(loadedMovies);
+
+        nextMovieId = 1;
+        for (Movie movie : movies) {
+            if (movie.getMovieId() >= nextMovieId) {
+                nextMovieId = movie.getMovieId() + 1;
+            }
+        }
+    }
 }

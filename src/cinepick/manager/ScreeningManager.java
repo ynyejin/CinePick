@@ -107,4 +107,16 @@ public class ScreeningManager {
             System.out.println(screening);
         }
     }
+
+    public void replaceScreenings(ArrayList<Screening> loadedScreenings) {
+        screenings.clear();
+        screenings.addAll(loadedScreenings);
+
+        nextScreeningId = 1;
+        for (Screening screening : screenings) {
+            if (screening.getScreeningId() >= nextScreeningId) {
+                nextScreeningId = screening.getScreeningId() + 1;
+            }
+        }
+    }
 }

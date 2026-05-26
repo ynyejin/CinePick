@@ -150,4 +150,16 @@ public class SeatManager {
         }
         return null;
     }
+
+    public void replaceSeats(ArrayList<Seat> loadedSeats) {
+        seats.clear();
+        seats.addAll(loadedSeats);
+
+        nextSeatId = 1;
+        for (Seat seat : seats) {
+            if (seat.getSeatId() >= nextSeatId) {
+                nextSeatId = seat.getSeatId() + 1;
+            }
+        }
+    }
 }

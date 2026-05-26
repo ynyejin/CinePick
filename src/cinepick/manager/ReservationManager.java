@@ -219,4 +219,27 @@ public class ReservationManager {
             System.out.println("--------------------------------");
         }
     }
+
+    public void replaceReservations(ArrayList<Reservation> loadedReservations,
+                                    ArrayList<ReservationSeat> loadedReservationSeats) {
+        reservations.clear();
+        reservations.addAll(loadedReservations);
+
+        reservationSeats.clear();
+        reservationSeats.addAll(loadedReservationSeats);
+
+        nextReservationId = 1;
+        for (Reservation reservation : reservations) {
+            if (reservation.getReservationId() >= nextReservationId) {
+                nextReservationId = reservation.getReservationId() + 1;
+            }
+        }
+
+        nextReservationSeatId = 1;
+        for (ReservationSeat reservationSeat : reservationSeats) {
+            if (reservationSeat.getReservationSeatId() >= nextReservationSeatId) {
+                nextReservationSeatId = reservationSeat.getReservationSeatId() + 1;
+            }
+        }
+    }
 }

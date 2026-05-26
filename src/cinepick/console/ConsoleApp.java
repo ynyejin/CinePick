@@ -10,6 +10,7 @@ import cinepick.model.Reservation;
 import cinepick.model.Screening;
 import cinepick.model.Seat;
 import cinepick.model.User;
+import cinepick.file.FileManager;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,6 +23,7 @@ public class ConsoleApp {
     private ScreeningManager screeningManager;
     private SeatManager seatManager;
     private ReservationManager reservationManager;
+    private FileManager fileManager;
 
     private User loginUser;
 
@@ -33,6 +35,9 @@ public class ConsoleApp {
         screeningManager = new ScreeningManager();
         seatManager = new SeatManager();
         reservationManager = new ReservationManager(seatManager, screeningManager);
+
+        fileManager = new FileManager();
+        fileManager.loadAll(userManager, movieManager, screeningManager, seatManager, reservationManager);
 
         loginUser = null;
     }
@@ -58,6 +63,8 @@ public class ConsoleApp {
                     loginAsAdmin();
                     break;
                 case 0:
+                    fileManager.saveAll(userManager, movieManager, screeningManager, seatManager, reservationManager);
+                    System.out.println("데이터가 저장되었습니다.");
                     System.out.println("프로그램을 종료합니다.");
                     return;
                 default:
