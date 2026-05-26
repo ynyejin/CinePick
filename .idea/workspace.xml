@@ -5,27 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="012e8b3b-e2f9-4c22-93ee-1702c63d2218" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/cinepick/console/ConsoleApp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/file/FileManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/LoginFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/MainFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/MoviePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/ReservationPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/SeatPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/manager/MovieManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/manager/ReservationManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/manager/ScreeningManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/manager/SeatManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/manager/UserManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/Admin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/Movie.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/Reservation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/ReservationSeat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/Screening.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/Seat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cinepick/model/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/Reservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/ReservationSeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/ReservationSeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/Screening.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/Screening.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/Seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/Seat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +51,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -116,7 +104,7 @@
       <updated>1779784791677</updated>
       <workItem from="1779784793555" duration="150000" />
       <workItem from="1779784955804" duration="13000" />
-      <workItem from="1779785002956" duration="2288000" />
+      <workItem from="1779785002956" duration="2537000" />
     </task>
     <servers />
   </component>
