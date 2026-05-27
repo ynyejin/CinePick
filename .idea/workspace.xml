@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="012e8b3b-e2f9-4c22-93ee-1702c63d2218" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/AdminFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/AppContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/GuiMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/cinepick/gui/UserMainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/console/ConsoleApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/console/ConsoleApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/file/FileManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/file/FileManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/manager/MovieManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/manager/MovieManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/manager/ReservationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/manager/ReservationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/manager/ScreeningManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/manager/ScreeningManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/manager/SeatManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/manager/SeatManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/manager/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/manager/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/screenings.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/screenings.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/seats.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/seats.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/LoginFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/gui/LoginFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,12 +62,26 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "/Users/yoonyejin/CinePick/src/Main.java",
     "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.GuiMain">
+    <configuration name="GuiMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="cinepick.gui.GuiMain" />
+      <module name="CinePick" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cinepick.gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cinepick.Main" />
       <module name="CinePick" />
@@ -84,6 +97,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.GuiMain" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -105,7 +119,7 @@
       <updated>1779784791677</updated>
       <workItem from="1779784793555" duration="150000" />
       <workItem from="1779784955804" duration="13000" />
-      <workItem from="1779785002956" duration="4183000" />
+      <workItem from="1779785002956" duration="6461000" />
     </task>
     <servers />
   </component>
