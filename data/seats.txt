@@ -21,7 +21,7 @@
 21|2|A1|false
 22|2|A2|true
 23|2|A3|true
-24|2|A4|false
+24|2|A4|true
 25|2|A5|false
 26|2|B1|false
 27|2|B2|false

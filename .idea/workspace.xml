@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="012e8b3b-e2f9-4c22-93ee-1702c63d2218" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/MainFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/MoviePanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/ReservationPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/SeatPanel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cinepick/gui/UserMainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cinepick/gui/UserMainFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +114,7 @@
       <updated>1779784791677</updated>
       <workItem from="1779784793555" duration="150000" />
       <workItem from="1779784955804" duration="13000" />
-      <workItem from="1779785002956" duration="9414000" />
+      <workItem from="1779785002956" duration="9758000" />
     </task>
     <servers />
   </component>
