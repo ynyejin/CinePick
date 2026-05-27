@@ -32,10 +32,10 @@ public class AdminFrame extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 8, 8));
 
-        JButton movieButton = new JButton("영화 목록");
-        JButton addMovieButton = new JButton("영화 등록");
-        JButton userButton = new JButton("회원 목록");
-        JButton logoutButton = new JButton("로그아웃");
+        JButton movieButton = createMenuButton("영화 목록");
+        JButton addMovieButton = createMenuButton("영화 등록");
+        JButton userButton = createMenuButton("회원 목록");
+        JButton logoutButton = createMenuButton("로그아웃");
 
         buttonPanel.add(movieButton);
         buttonPanel.add(addMovieButton);
@@ -109,5 +109,17 @@ public class AdminFrame extends JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "상영 시간과 평점은 숫자로 입력해주세요.");
         }
+    }
+
+    private JButton createMenuButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setBackground(new Color(45, 70, 140));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setPreferredSize(new Dimension(120, 42));
+        return button;
     }
 }

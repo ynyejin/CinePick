@@ -101,42 +101,59 @@ public class LoginFrame extends JFrame {
             return;
         }
 
-        if (adminLogin && !user.getRole().equals("ADMIN")) {
-            JOptionPane.showMessageDialog(this, "관리자 계정이 아닙니다.");
+        String role = user.getRole().trim();
+
+        if (adminLogin) {
+            if (!role.equalsIgnoreCase("ADMIN")) {
+                JOptionPane.showMessageDialog(this, "관리자 계정이 아닙니다.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "관리자 로그인 성공");
+            new AdminFrame(context, user).setVisible(true);
+            dispose();
             return;
         }
 
-        if (!adminLogin && !user.getRole().equals("USER")) {
+        if (!role.equalsIgnoreCase("USER")) {
             JOptionPane.showMessageDialog(this, "사용자 계정이 아닙니다.");
             return;
         }
 
         JOptionPane.showMessageDialog(this, user.getName() + "님, 로그인되었습니다.");
-
-        if (adminLogin) {
-            new AdminFrame(context, user).setVisible(true);
-        } else {
-            new UserMainFrame(context, user).setVisible(true);
-        }
-
+        new UserMainFrame(context, user).setVisible(true);
         dispose();
     }
 
     private void register() {
         String userId = JOptionPane.showInputDialog(this, "아이디를 입력하세요.");
-        if (userId == null || userId.trim().isEmpty()) return;
+        if (userId == null || userId.trim().isEmpty()) {
+            return;
+        }
 
         String password = JOptionPane.showInputDialog(this, "비밀번호를 입력하세요.");
-        if (password == null || password.trim().isEmpty()) return;
+        if (password == null || password.trim().isEmpty()) {
+            return;
+        }
 
         String name = JOptionPane.showInputDialog(this, "이름을 입력하세요.");
-        if (name == null || name.trim().isEmpty()) return;
+        if (name == null || name.trim().isEmpty()) {
+            return;
+        }
 
-        boolean result = context.userManager.registerUser(userId.trim(), password.trim(), name.trim());
+        userId = userId.trim();
+        password = password.trim();
+        name = name.trim();
+
+        boolean result = context.userManager.registerUser(userId, password, name);
 
         if (result) {
             context.saveAll();
-            JOptionPane.showMessageDialog(this, "회원가입이 완료되었습니다.");
+
+            idField.setText(userId);
+            passwordField.setText(password);
+
+            JOptionPane.showMessageDialog(this, "회원가입이 완료되었습니다.\n이제 로그인 버튼을 눌러주세요.");
         } else {
             JOptionPane.showMessageDialog(this, "이미 사용 중인 아이디입니다.");
         }

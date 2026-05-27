@@ -19,8 +19,8 @@
 19|1|D4|false
 20|1|D5|false
 21|2|A1|false
-22|2|A2|false
-23|2|A3|false
+22|2|A2|true
+23|2|A3|true
 24|2|A4|false
 25|2|A5|false
 26|2|B1|false
