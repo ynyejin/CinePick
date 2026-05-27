@@ -1,21 +1,25 @@
 package cinepick.gui;
 
 import cinepick.model.Movie;
+import cinepick.model.Reservation;
 import cinepick.model.Screening;
 import cinepick.model.User;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class AdminFrame extends JFrame {
     private AppContext context;
     private User adminUser;
 
-    private JTextArea outputArea;
+    private JPanel contentPanel;
 
     private static final Color BACKGROUND_COLOR = new Color(245, 247, 250);
     private static final Color SIDEBAR_COLOR = new Color(35, 45, 75);
     private static final Color PRIMARY_COLOR = new Color(70, 90, 160);
+    private static final Color DANGER_COLOR = new Color(190, 70, 70);
     private static final Color TEXT_COLOR = new Color(40, 45, 60);
 
     public AdminFrame(AppContext context, User adminUser) {
@@ -23,7 +27,7 @@ public class AdminFrame extends JFrame {
         this.adminUser = adminUser;
 
         setTitle("CinePick - 관리자 메뉴");
-        setSize(900, 600);
+        setSize(950, 650);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -34,7 +38,6 @@ public class AdminFrame extends JFrame {
         JPanel rootPanel = new JPanel(new BorderLayout());
         rootPanel.setBackground(BACKGROUND_COLOR);
 
-        // ===== 상단 헤더 =====
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.WHITE);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(18, 24, 18, 24));
@@ -50,65 +53,31 @@ public class AdminFrame extends JFrame {
         headerPanel.add(titleLabel, BorderLayout.WEST);
         headerPanel.add(adminLabel, BorderLayout.EAST);
 
-        // ===== 왼쪽 사이드바 =====
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.setBackground(SIDEBAR_COLOR);
         sidePanel.setBorder(BorderFactory.createEmptyBorder(24, 16, 24, 16));
         sidePanel.setPreferredSize(new Dimension(170, 0));
 
-        JButton movieListButton = createSideButton("영화 목록");
-        JButton addMovieButton = createSideButton("영화 등록");
-        JButton updateMovieButton = createSideButton("영화 수정");
-        JButton deleteMovieButton = createSideButton("영화 삭제");
-        JButton screeningListButton = createSideButton("상영 정보");
-        JButton addScreeningButton = createSideButton("상영 등록");
-        JButton userListButton = createSideButton("회원 목록");
-        JButton reservationListButton = createSideButton("예매 내역");
+        JButton movieButton = createSideButton("영화 관리");
+        JButton screeningButton = createSideButton("상영 관리");
+        JButton userButton = createSideButton("회원 목록");
+        JButton reservationButton = createSideButton("예매 내역");
         JButton logoutButton = createSideButton("로그아웃");
 
-        sidePanel.add(movieListButton);
+        sidePanel.add(movieButton);
         sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(addMovieButton);
+        sidePanel.add(screeningButton);
         sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(updateMovieButton);
+        sidePanel.add(userButton);
         sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(deleteMovieButton);
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(screeningListButton);
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(addScreeningButton);
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(userListButton);
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(reservationListButton);
+        sidePanel.add(reservationButton);
         sidePanel.add(Box.createVerticalGlue());
         sidePanel.add(logoutButton);
 
-        // ===== 중앙 출력 영역 =====
-        JPanel contentPanel = new JPanel(new BorderLayout(0, 12));
+        contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(BACKGROUND_COLOR);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
-
-        JLabel contentTitle = new JLabel("관리자 정보 보기");
-        contentTitle.setFont(new Font("SansSerif", Font.BOLD, 20));
-        contentTitle.setForeground(TEXT_COLOR);
-
-        outputArea = new JTextArea();
-        outputArea.setEditable(false);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        outputArea.setForeground(TEXT_COLOR);
-        outputArea.setBackground(Color.WHITE);
-        outputArea.setLineWrap(false);
-        outputArea.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
-
-        JScrollPane scrollPane = new JScrollPane(outputArea);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 225, 235)));
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-        contentPanel.add(contentTitle, BorderLayout.NORTH);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
 
         rootPanel.add(headerPanel, BorderLayout.NORTH);
         rootPanel.add(sidePanel, BorderLayout.WEST);
@@ -116,14 +85,10 @@ public class AdminFrame extends JFrame {
 
         add(rootPanel);
 
-        movieListButton.addActionListener(e -> showMovies());
-        addMovieButton.addActionListener(e -> addMovie());
-        updateMovieButton.addActionListener(e -> updateMovie());
-        deleteMovieButton.addActionListener(e -> deleteMovie());
-        screeningListButton.addActionListener(e -> showScreenings());
-        addScreeningButton.addActionListener(e -> addScreening());
-        userListButton.addActionListener(e -> showUsers());
-        reservationListButton.addActionListener(e -> showReservations());
+        movieButton.addActionListener(e -> showMovieManagementPanel());
+        screeningButton.addActionListener(e -> showScreeningManagementPanel());
+        userButton.addActionListener(e -> showUserTable());
+        reservationButton.addActionListener(e -> showReservationTable());
 
         logoutButton.addActionListener(e -> {
             context.saveAll();
@@ -131,43 +96,125 @@ public class AdminFrame extends JFrame {
             dispose();
         });
 
-        showMovies();
+        showMovieManagementPanel();
     }
 
     private JButton createSideButton(String text) {
         JButton button = new JButton(text);
-
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
         button.setBackground(PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setOpaque(true);
         button.setBorderPainted(false);
-        button.setMaximumSize(new Dimension(138, 40));
-        button.setPreferredSize(new Dimension(138, 40));
+        button.setMaximumSize(new Dimension(138, 42));
+        button.setPreferredSize(new Dimension(138, 42));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         return button;
     }
 
-    private void showMovies() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== 영화 목록 =====\n\n");
+    private JButton createPrimaryButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 13));
+        button.setBackground(PRIMARY_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setPreferredSize(new Dimension(120, 38));
+        return button;
+    }
 
-        sb.append(String.format("%-6s %-20s %-12s %-10s %-8s\n",
-                "번호", "제목", "장르", "상영시간", "평점"));
-        sb.append("--------------------------------------------------------------\n");
+    private JButton createDangerButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 13));
+        button.setBackground(DANGER_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setPreferredSize(new Dimension(120, 38));
+        return button;
+    }
+
+    private void setContent(JPanel panel) {
+        contentPanel.removeAll();
+        contentPanel.add(panel, BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private JTable createStyledTable(DefaultTableModel model) {
+        JTable table = new JTable(model);
+        table.setRowHeight(32);
+        table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setGridColor(new Color(230, 230, 230));
+
+        JTableHeader header = table.getTableHeader();
+        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setBackground(new Color(230, 233, 242));
+        header.setForeground(TEXT_COLOR);
+
+        return table;
+    }
+
+    // =========================
+    // 영화 관리
+    // =========================
+    private void showMovieManagementPanel() {
+        JPanel panel = new JPanel(new BorderLayout(0, 16));
+        panel.setBackground(BACKGROUND_COLOR);
+
+        JLabel pageTitle = new JLabel("영화 관리");
+        pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
+        pageTitle.setForeground(TEXT_COLOR);
+
+        String[] columns = {"영화번호", "제목", "장르", "상영시간", "평점"};
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         for (Movie movie : context.movieManager.getMovies()) {
-            sb.append(String.format("%-6d %-20s %-12s %-10s %-8.1f\n",
+            model.addRow(new Object[]{
                     movie.getMovieId(),
                     movie.getTitle(),
                     movie.getGenre(),
-                    movie.getRunningTime() + "분",
-                    movie.getRating()));
+                    movie.getRunningTime(),
+                    movie.getRating()
+            });
         }
 
-        outputArea.setText(sb.toString());
+        JTable table = createStyledTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JButton addButton = createPrimaryButton("영화 등록");
+        JButton updateButton = createPrimaryButton("영화 수정");
+        JButton deleteButton = createDangerButton("영화 삭제");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(addButton);
+        buttonPanel.add(updateButton);
+        buttonPanel.add(deleteButton);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(BACKGROUND_COLOR);
+        topPanel.add(pageTitle, BorderLayout.WEST);
+        topPanel.add(buttonPanel, BorderLayout.EAST);
+
+        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        setContent(panel);
+
+        addButton.addActionListener(e -> addMovie());
+        updateButton.addActionListener(e -> updateSelectedMovie(table));
+        deleteButton.addActionListener(e -> deleteSelectedMovie(table));
     }
 
     private void addMovie() {
@@ -191,128 +238,142 @@ public class AdminFrame extends JFrame {
             context.saveAll();
 
             JOptionPane.showMessageDialog(this, "영화가 등록되었습니다.");
-            showMovies();
+            showMovieManagementPanel();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "상영 시간과 평점은 숫자로 입력해주세요.");
         }
     }
 
-    private void updateMovie() {
-        showMovies();
+    private void updateSelectedMovie(JTable table) {
+        int selectedRow = table.getSelectedRow();
 
-        String movieIdText = JOptionPane.showInputDialog(this, "수정할 영화 번호:");
-        if (movieIdText == null || movieIdText.trim().isEmpty()) return;
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "수정할 영화를 선택해주세요.");
+            return;
+        }
+
+        int movieId = (int) table.getValueAt(selectedRow, 0);
+        Movie movie = context.movieManager.findMovieById(movieId);
+
+        if (movie == null) {
+            JOptionPane.showMessageDialog(this, "존재하지 않는 영화입니다.");
+            return;
+        }
+
+        String title = JOptionPane.showInputDialog(this, "새 영화 제목:", movie.getTitle());
+        if (title == null || title.trim().isEmpty()) return;
+
+        String genre = JOptionPane.showInputDialog(this, "새 장르:", movie.getGenre());
+        if (genre == null || genre.trim().isEmpty()) return;
+
+        String runningTimeText = JOptionPane.showInputDialog(this, "새 상영 시간(분):", movie.getRunningTime());
+        if (runningTimeText == null || runningTimeText.trim().isEmpty()) return;
+
+        String ratingText = JOptionPane.showInputDialog(this, "새 평점:", movie.getRating());
+        if (ratingText == null || ratingText.trim().isEmpty()) return;
 
         try {
-            int movieId = Integer.parseInt(movieIdText.trim());
-            Movie movie = context.movieManager.findMovieById(movieId);
-
-            if (movie == null) {
-                JOptionPane.showMessageDialog(this, "존재하지 않는 영화입니다.");
-                return;
-            }
-
-            String title = JOptionPane.showInputDialog(this, "새 영화 제목:", movie.getTitle());
-            if (title == null || title.trim().isEmpty()) return;
-
-            String genre = JOptionPane.showInputDialog(this, "새 장르:", movie.getGenre());
-            if (genre == null || genre.trim().isEmpty()) return;
-
-            String runningTimeText = JOptionPane.showInputDialog(this, "새 상영 시간(분):", movie.getRunningTime());
-            if (runningTimeText == null || runningTimeText.trim().isEmpty()) return;
-
-            String ratingText = JOptionPane.showInputDialog(this, "새 평점:", movie.getRating());
-            if (ratingText == null || ratingText.trim().isEmpty()) return;
-
             int runningTime = Integer.parseInt(runningTimeText.trim());
             double rating = Double.parseDouble(ratingText.trim());
 
-            boolean result = context.movieManager.updateMovie(
-                    movieId,
-                    title.trim(),
-                    genre.trim(),
-                    runningTime,
-                    rating
-            );
+            context.movieManager.updateMovie(movieId, title.trim(), genre.trim(), runningTime, rating);
+            context.saveAll();
 
-            if (result) {
-                context.saveAll();
-                JOptionPane.showMessageDialog(this, "영화 정보가 수정되었습니다.");
-                showMovies();
-            } else {
-                JOptionPane.showMessageDialog(this, "영화 수정에 실패했습니다.");
-            }
+            JOptionPane.showMessageDialog(this, "영화 정보가 수정되었습니다.");
+            showMovieManagementPanel();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "번호, 상영 시간, 평점은 숫자로 입력해주세요.");
+            JOptionPane.showMessageDialog(this, "상영 시간과 평점은 숫자로 입력해주세요.");
         }
     }
 
-    private void deleteMovie() {
-        showMovies();
+    private void deleteSelectedMovie(JTable table) {
+        int selectedRow = table.getSelectedRow();
 
-        String movieIdText = JOptionPane.showInputDialog(this, "삭제할 영화 번호:");
-        if (movieIdText == null || movieIdText.trim().isEmpty()) return;
-
-        try {
-            int movieId = Integer.parseInt(movieIdText.trim());
-            Movie movie = context.movieManager.findMovieById(movieId);
-
-            if (movie == null) {
-                JOptionPane.showMessageDialog(this, "존재하지 않는 영화입니다.");
-                return;
-            }
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    movie.getTitle() + " 영화를 삭제하시겠습니까?",
-                    "영화 삭제 확인",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            boolean result = context.movieManager.deleteMovie(movieId);
-
-            if (result) {
-                context.saveAll();
-                JOptionPane.showMessageDialog(this, "영화가 삭제되었습니다.");
-                showMovies();
-            } else {
-                JOptionPane.showMessageDialog(this, "영화 삭제에 실패했습니다.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "영화 번호는 숫자로 입력해주세요.");
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "삭제할 영화를 선택해주세요.");
+            return;
         }
+
+        int movieId = (int) table.getValueAt(selectedRow, 0);
+        Movie movie = context.movieManager.findMovieById(movieId);
+
+        if (movie == null) {
+            JOptionPane.showMessageDialog(this, "존재하지 않는 영화입니다.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                movie.getTitle() + " 영화를 삭제하시겠습니까?",
+                "영화 삭제 확인",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        context.movieManager.deleteMovie(movieId);
+        context.saveAll();
+
+        JOptionPane.showMessageDialog(this, "영화가 삭제되었습니다.");
+        showMovieManagementPanel();
     }
 
-    private void showScreenings() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== 상영 정보 목록 =====\n\n");
+    // =========================
+    // 상영 관리
+    // =========================
+    private void showScreeningManagementPanel() {
+        JPanel panel = new JPanel(new BorderLayout(0, 16));
+        panel.setBackground(BACKGROUND_COLOR);
 
-        sb.append(String.format("%-8s %-20s %-10s %-20s %-10s %-8s\n",
-                "상영번호", "영화", "상영관", "상영시간", "좌석수", "혼잡률"));
-        sb.append("--------------------------------------------------------------------------------\n");
+        JLabel pageTitle = new JLabel("상영 관리");
+        pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
+        pageTitle.setForeground(TEXT_COLOR);
+
+        String[] columns = {"상영번호", "영화", "상영관", "상영시간", "좌석수", "혼잡률"};
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         for (Screening screening : context.screeningManager.getScreenings()) {
             Movie movie = context.movieManager.findMovieById(screening.getMovieId());
 
-            sb.append(String.format("%-8d %-20s %-10s %-20s %-10d %-8s\n",
+            model.addRow(new Object[]{
                     screening.getScreeningId(),
                     movie != null ? movie.getTitle() : "알 수 없음",
                     screening.getTheater(),
                     screening.getScreeningTime(),
                     screening.getTotalSeats(),
-                    screening.getCongestionRate() + "%"));
+                    screening.getCongestionRate() + "%"
+            });
         }
 
-        outputArea.setText(sb.toString());
+        JTable table = createStyledTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JButton addButton = createPrimaryButton("상영 등록");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(addButton);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(BACKGROUND_COLOR);
+        topPanel.add(pageTitle, BorderLayout.WEST);
+        topPanel.add(buttonPanel, BorderLayout.EAST);
+
+        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        setContent(panel);
+
+        addButton.addActionListener(e -> addScreening());
     }
 
     private void addScreening() {
-        showMovies();
-
         String movieIdText = JOptionPane.showInputDialog(this, "상영 정보를 등록할 영화 번호:");
         if (movieIdText == null || movieIdText.trim().isEmpty()) return;
 
@@ -347,42 +408,71 @@ public class AdminFrame extends JFrame {
             context.saveAll();
 
             JOptionPane.showMessageDialog(this, "상영 정보가 등록되었습니다.");
-            showScreenings();
+            showScreeningManagementPanel();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "영화 번호와 좌석 수는 숫자로 입력해주세요.");
         }
     }
 
-    private void showUsers() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== 회원 목록 =====\n\n");
+    // =========================
+    // 회원 목록
+    // =========================
+    private void showUserTable() {
+        JPanel panel = new JPanel(new BorderLayout(0, 16));
+        panel.setBackground(BACKGROUND_COLOR);
 
-        sb.append(String.format("%-16s %-12s %-8s %-10s\n",
-                "아이디", "이름", "포인트", "권한"));
-        sb.append("------------------------------------------------\n");
+        JLabel pageTitle = new JLabel("회원 목록");
+        pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
+        pageTitle.setForeground(TEXT_COLOR);
+
+        String[] columns = {"아이디", "이름", "포인트", "권한"};
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         for (User user : context.userManager.getUsers()) {
-            sb.append(String.format("%-16s %-12s %-8d %-10s\n",
+            model.addRow(new Object[]{
                     user.getUserId(),
                     user.getName(),
                     user.getPoint(),
-                    user.getRole()));
+                    user.getRole()
+            });
         }
 
-        outputArea.setText(sb.toString());
+        JTable table = createStyledTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        panel.add(pageTitle, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        setContent(panel);
     }
 
-    private void showReservations() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("===== 전체 예매 내역 =====\n\n");
+    // =========================
+    // 전체 예매 내역
+    // =========================
+    private void showReservationTable() {
+        JPanel panel = new JPanel(new BorderLayout(0, 16));
+        panel.setBackground(BACKGROUND_COLOR);
 
-        if (context.reservationManager.getReservations().isEmpty()) {
-            sb.append("예매 내역이 없습니다.\n");
-            outputArea.setText(sb.toString());
-            return;
-        }
+        JLabel pageTitle = new JLabel("전체 예매 내역");
+        pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
+        pageTitle.setForeground(TEXT_COLOR);
 
-        for (cinepick.model.Reservation reservation : context.reservationManager.getReservations()) {
+        String[] columns = {"예매번호", "회원ID", "영화", "상영관", "상영시간", "좌석", "상태", "예매일시"};
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        for (Reservation reservation : context.reservationManager.getReservations()) {
             Screening screening = context.screeningManager.findScreeningById(reservation.getScreeningId());
             Movie movie = null;
 
@@ -390,17 +480,24 @@ public class AdminFrame extends JFrame {
                 movie = context.movieManager.findMovieById(screening.getMovieId());
             }
 
-            sb.append("예매번호: ").append(reservation.getReservationId()).append("\n");
-            sb.append("회원ID: ").append(reservation.getUserId()).append("\n");
-            sb.append("영화: ").append(movie != null ? movie.getTitle() : "알 수 없음").append("\n");
-            sb.append("상영관: ").append(screening != null ? screening.getTheater() : "알 수 없음").append("\n");
-            sb.append("상영 시간: ").append(screening != null ? screening.getScreeningTime() : "알 수 없음").append("\n");
-            sb.append("좌석: ").append(context.reservationManager.getSeatNumbersByReservationId(reservation.getReservationId())).append("\n");
-            sb.append("상태: ").append(reservation.getStatus()).append("\n");
-            sb.append("예매 일시: ").append(reservation.getReservedAt()).append("\n");
-            sb.append("--------------------------------\n");
+            model.addRow(new Object[]{
+                    reservation.getReservationId(),
+                    reservation.getUserId(),
+                    movie != null ? movie.getTitle() : "알 수 없음",
+                    screening != null ? screening.getTheater() : "알 수 없음",
+                    screening != null ? screening.getScreeningTime() : "알 수 없음",
+                    context.reservationManager.getSeatNumbersByReservationId(reservation.getReservationId()),
+                    reservation.getStatus(),
+                    reservation.getReservedAt()
+            });
         }
 
-        outputArea.setText(sb.toString());
+        JTable table = createStyledTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        panel.add(pageTitle, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        setContent(panel);
     }
 }
