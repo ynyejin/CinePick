@@ -456,11 +456,11 @@ public class AdminFrame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout(0, 16));
         panel.setBackground(BACKGROUND_COLOR);
 
-        JLabel pageTitle = new JLabel("회원 목록");
+        JLabel pageTitle = new JLabel("회원 관리");
         pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
         pageTitle.setForeground(TEXT_COLOR);
 
-        String[] columns = {"아이디", "이름", "포인트", "권한"};
+        String[] columns = {"아이디", "이름", "멤버십 등급", "포인트", "할인율", "권한"};
 
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
@@ -473,7 +473,9 @@ public class AdminFrame extends JFrame {
             model.addRow(new Object[]{
                     user.getUserId(),
                     user.getName(),
+                    user.getMembershipGrade(),
                     user.getPoint(),
+                    user.getDiscountRate() + "%",
                     user.getRole()
             });
         }
@@ -481,10 +483,23 @@ public class AdminFrame extends JFrame {
         JTable table = createStyledTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
-        panel.add(pageTitle, BorderLayout.NORTH);
+        JButton updatePointButton = createPrimaryButton("포인트 수정");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(updatePointButton);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(BACKGROUND_COLOR);
+        topPanel.add(pageTitle, BorderLayout.WEST);
+        topPanel.add(buttonPanel, BorderLayout.EAST);
+
+        panel.add(topPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         setContent(panel);
+
+        updatePointButton.addActionListener(e -> updateSelectedUserPoint(table));
     }
 
     // =========================
@@ -534,5 +549,49 @@ public class AdminFrame extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
 
         setContent(panel);
+    }
+
+    private void updateSelectedUserPoint(JTable table) {
+        int selectedRow = table.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "포인트를 수정할 회원을 선택해주세요.");
+            return;
+        }
+
+        String userId = (String) table.getValueAt(selectedRow, 0);
+        String role = (String) table.getValueAt(selectedRow, 5);
+
+        if (role.equalsIgnoreCase("ADMIN")) {
+            JOptionPane.showMessageDialog(this, "관리자 계정의 포인트는 수정할 수 없습니다.");
+            return;
+        }
+
+        String pointText = JOptionPane.showInputDialog(this, "새 포인트를 입력하세요:");
+
+        if (pointText == null || pointText.trim().isEmpty()) {
+            return;
+        }
+
+        try {
+            int point = Integer.parseInt(pointText.trim());
+
+            if (point < 0) {
+                JOptionPane.showMessageDialog(this, "포인트는 0 이상이어야 합니다.");
+                return;
+            }
+
+            boolean result = context.userManager.updateUserPoint(userId, point);
+
+            if (result) {
+                context.saveAll();
+                JOptionPane.showMessageDialog(this, "회원 포인트가 수정되었습니다.");
+                showUserTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "회원 포인트 수정에 실패했습니다.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "포인트는 숫자로 입력해주세요.");
+        }
     }
 }

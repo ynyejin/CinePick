@@ -417,9 +417,11 @@ public class UserMainFrame extends JFrame {
         boolean result = context.reservationManager.cancelReservation(reservationId);
 
         if (result) {
+            loginUser.subtractPoint(100);
             context.saveAll();
-            JOptionPane.showMessageDialog(this, "예매가 취소되었습니다.");
-            showReservationTable();
+
+            JOptionPane.showMessageDialog(this, "예매가 취소되었습니다.\n적립된 100포인트가 차감되었습니다.");
+            refreshUserInfo();
         } else {
             JOptionPane.showMessageDialog(this, "예매 취소에 실패했습니다.");
         }
@@ -490,4 +492,5 @@ public class UserMainFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
     }
+
 }

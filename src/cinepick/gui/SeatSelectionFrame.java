@@ -25,6 +25,7 @@ public class SeatSelectionFrame extends JFrame {
     private static final Color SELECTED_COLOR = new Color(70, 130, 180);
     private static final Color RESERVED_COLOR = new Color(170, 170, 170);
     private static final Color PRIMARY_COLOR = new Color(45, 70, 140);
+    private static final int TICKET_PRICE = 12000;
 
     public SeatSelectionFrame(AppContext context, User loginUser, Movie movie, Screening screening, UserMainFrame parentFrame) {
         this.context = context;
@@ -190,6 +191,14 @@ public class SeatSelectionFrame extends JFrame {
             return;
         }
 
+        int seatCount = selectedSeatIds.size();
+        int totalPrice = TICKET_PRICE * seatCount;
+
+        String membershipGrade = loginUser.getMembershipGrade();
+        int discountRate = loginUser.getDiscountRate();
+        int discountAmount = totalPrice * discountRate / 100;
+        int finalPrice = totalPrice - discountAmount;
+
         loginUser.addPoint(100);
         context.saveAll();
 
@@ -199,6 +208,13 @@ public class SeatSelectionFrame extends JFrame {
                         "예매번호: " + reservation.getReservationId() + "\n" +
                         "영화: " + movie.getTitle() + "\n" +
                         "좌석: " + context.reservationManager.getSeatNumbersByReservationId(reservation.getReservationId()) + "\n" +
+                        "좌석 수: " + seatCount + "매\n" +
+                        "티켓 가격: " + String.format("%,d", TICKET_PRICE) + "원\n" +
+                        "총 금액: " + String.format("%,d", totalPrice) + "원\n" +
+                        "멤버십 등급: " + membershipGrade + "\n" +
+                        "할인율: " + discountRate + "%\n" +
+                        "할인 금액: " + String.format("%,d", discountAmount) + "원\n" +
+                        "최종 결제 금액: " + String.format("%,d", finalPrice) + "원\n" +
                         "혼잡률: " + screening.getCongestionRate() + "%\n" +
                         "100 포인트가 적립되었습니다."
         );

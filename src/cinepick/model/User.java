@@ -59,6 +59,42 @@ public class User {
         this.point += amount;
     }
 
+    public String getMembershipGrade() {
+        if (role.equalsIgnoreCase("ADMIN")) {
+            return "STAFF";
+        }
+
+        if (point >= 1000) {
+            return "GOLD";
+        } else if (point >= 500) {
+            return "SILVER";
+        } else {
+            return "BRONZE";
+        }
+    }
+
+    public int getDiscountRate() {
+        if (role.equalsIgnoreCase("ADMIN")) {
+            return 20;
+        }
+
+        if (point >= 1000) {
+            return 10;
+        } else if (point >= 500) {
+            return 5;
+        } else {
+            return 0;
+        }
+    }
+
+    public void subtractPoint(int amount) {
+        this.point -= amount;
+
+        if (this.point < 0) {
+            this.point = 0;
+        }
+    }
+
     @Override
     public String toString() {
         return "아이디: " + userId +

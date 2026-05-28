@@ -94,4 +94,19 @@ public class UserManager {
         users.remove(user);
         return true;
     }
+
+    public boolean updateUserPoint(String userId, int point) {
+        User user = findUserById(userId);
+
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
+            return false;
+        }
+
+        user.setPoint(point);
+        return true;
+    }
 }
