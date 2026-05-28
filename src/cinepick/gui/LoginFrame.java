@@ -11,77 +11,160 @@ public class LoginFrame extends JFrame {
     private JTextField idField;
     private JPasswordField passwordField;
 
+    private static final Color BACKGROUND_COLOR = new Color(245, 247, 250);
+    private static final Color PRIMARY_COLOR = new Color(70, 90, 160);
+    private static final Color TEXT_COLOR = new Color(40, 45, 60);
+    private static final Color SUB_TEXT_COLOR = new Color(100, 100, 110);
+
     public LoginFrame(AppContext context) {
         this.context = context;
 
         setTitle("CinePick - 로그인");
-        setSize(420, 360);
+        setSize(520, 560);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         initComponents();
     }
 
     private void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(245, 247, 250));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        JPanel rootPanel = new JPanel(new GridBagLayout());
+        rootPanel.setBackground(BACKGROUND_COLOR);
+        rootPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        JLabel titleLabel = new JLabel("CinePick", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
-        titleLabel.setForeground(new Color(40, 45, 60));
+        JPanel loginCard = new JPanel();
+        loginCard.setLayout(new BoxLayout(loginCard, BoxLayout.Y_AXIS));
+        loginCard.setBackground(Color.WHITE);
+        loginCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 225, 235)),
+                BorderFactory.createEmptyBorder(36, 42, 36, 42)
+        ));
+        loginCard.setPreferredSize(new Dimension(390, 430));
 
-        JLabel subtitleLabel = new JLabel("Java Movie Reservation System", SwingConstants.CENTER);
+        JLabel logoLabel = new JLabel("CinePick");
+        logoLabel.setFont(new Font("SansSerif", Font.BOLD, 34));
+        logoLabel.setForeground(TEXT_COLOR);
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitleLabel = new JLabel("Java Movie Reservation System");
         subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-        subtitleLabel.setForeground(new Color(100, 100, 100));
+        subtitleLabel.setForeground(SUB_TEXT_COLOR);
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel titlePanel = new JPanel(new GridLayout(2, 1));
-        titlePanel.setOpaque(false);
-        titlePanel.add(titleLabel);
-        titlePanel.add(subtitleLabel);
+        JLabel loginTitleLabel = new JLabel("로그인");
+        loginTitleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        loginTitleLabel.setForeground(TEXT_COLOR);
+        loginTitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 12));
-        formPanel.setOpaque(false);
-        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 25, 0));
+        JLabel idLabel = createInputLabel("아이디");
+        idField = createTextField();
 
-        JLabel idLabel = new JLabel("아이디");
-        JLabel passwordLabel = new JLabel("비밀번호");
+        JLabel passwordLabel = createInputLabel("비밀번호");
+        passwordField = createPasswordField();
 
-        idField = new JTextField();
-        passwordField = new JPasswordField();
+        JButton loginButton = createPrimaryButton("사용자 로그인");
+        JButton adminButton = createSecondaryButton("관리자 로그인");
+        JButton registerButton = createOutlineButton("회원가입");
 
-        formPanel.add(idLabel);
-        formPanel.add(idField);
-        formPanel.add(passwordLabel);
-        formPanel.add(passwordField);
+        loginCard.add(logoLabel);
+        loginCard.add(Box.createVerticalStrut(6));
+        loginCard.add(subtitleLabel);
+        loginCard.add(Box.createVerticalStrut(32));
 
-        JButton loginButton = createButton("로그인");
-        JButton registerButton = createButton("회원가입");
-        JButton adminButton = createButton("관리자 로그인");
+        loginCard.add(loginTitleLabel);
+        loginCard.add(Box.createVerticalStrut(20));
 
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 0, 8));
-        buttonPanel.setOpaque(false);
-        buttonPanel.add(loginButton);
-        buttonPanel.add(registerButton);
-        buttonPanel.add(adminButton);
+        loginCard.add(idLabel);
+        loginCard.add(Box.createVerticalStrut(6));
+        loginCard.add(idField);
+        loginCard.add(Box.createVerticalStrut(16));
 
-        mainPanel.add(titlePanel, BorderLayout.NORTH);
-        mainPanel.add(formPanel, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        loginCard.add(passwordLabel);
+        loginCard.add(Box.createVerticalStrut(6));
+        loginCard.add(passwordField);
+        loginCard.add(Box.createVerticalStrut(26));
 
-        add(mainPanel);
+        loginCard.add(loginButton);
+        loginCard.add(Box.createVerticalStrut(10));
+        loginCard.add(adminButton);
+        loginCard.add(Box.createVerticalStrut(10));
+        loginCard.add(registerButton);
+
+        rootPanel.add(loginCard);
+        add(rootPanel);
 
         loginButton.addActionListener(e -> login(false));
         adminButton.addActionListener(e -> login(true));
         registerButton.addActionListener(e -> register());
     }
 
-    private JButton createButton(String text) {
+    private JLabel createInputLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 13));
+        label.setForeground(TEXT_COLOR);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return label;
+    }
+
+    private JTextField createTextField() {
+        JTextField field = new JTextField();
+        field.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(210, 215, 225)),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        ));
+        return field;
+    }
+
+    private JPasswordField createPasswordField() {
+        JPasswordField field = new JPasswordField();
+        field.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(210, 215, 225)),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        ));
+        return field;
+    }
+
+    private JButton createPrimaryButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setBackground(new Color(70, 90, 160));
+        button.setBackground(PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        return button;
+    }
+
+    private JButton createSecondaryButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setBackground(new Color(95, 110, 150));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        return button;
+    }
+
+    private JButton createOutlineButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setBackground(Color.WHITE);
+        button.setForeground(PRIMARY_COLOR);
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR));
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         return button;
     }
 
@@ -126,36 +209,173 @@ public class LoginFrame extends JFrame {
     }
 
     private void register() {
-        String userId = JOptionPane.showInputDialog(this, "아이디를 입력하세요.");
-        if (userId == null || userId.trim().isEmpty()) {
-            return;
-        }
+        JDialog dialog = new JDialog(this, "회원가입", true);
+        dialog.setSize(440, 460);
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
 
-        String password = JOptionPane.showInputDialog(this, "비밀번호를 입력하세요.");
-        if (password == null || password.trim().isEmpty()) {
-            return;
-        }
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BACKGROUND_COLOR);
+        panel.setBorder(BorderFactory.createEmptyBorder(24, 28, 24, 28));
 
-        String name = JOptionPane.showInputDialog(this, "이름을 입력하세요.");
-        if (name == null || name.trim().isEmpty()) {
-            return;
-        }
+        JLabel titleLabel = new JLabel("회원가입");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(TEXT_COLOR);
 
-        userId = userId.trim();
-        password = password.trim();
-        name = name.trim();
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(BACKGROUND_COLOR);
 
-        boolean result = context.userManager.registerUser(userId, password, name);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 0, 6, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
 
-        if (result) {
-            context.saveAll();
+        JLabel idLabel = createInputLabel("아이디");
+        JTextField registerIdField = createTextField();
 
-            idField.setText(userId);
-            passwordField.setText(password);
+        JButton checkButton = createSecondaryButton("아이디 중복 확인");
+        JLabel checkResultLabel = new JLabel("아이디는 영문 소문자와 숫자 4~12자만 가능합니다.");
+        checkResultLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        checkResultLabel.setForeground(SUB_TEXT_COLOR);
 
-            JOptionPane.showMessageDialog(this, "회원가입이 완료되었습니다.\n이제 로그인 버튼을 눌러주세요.");
-        } else {
-            JOptionPane.showMessageDialog(this, "이미 사용 중인 아이디입니다.");
-        }
+        JLabel passwordLabel = createInputLabel("비밀번호");
+        JPasswordField registerPasswordField = createPasswordField();
+
+        JLabel nameLabel = createInputLabel("이름");
+        JTextField nameField = createTextField();
+
+        final boolean[] checked = {false};
+        final String[] checkedId = {""};
+
+        gbc.gridy = 0;
+        formPanel.add(idLabel, gbc);
+
+        gbc.gridy = 1;
+        formPanel.add(registerIdField, gbc);
+
+        gbc.gridy = 2;
+        formPanel.add(checkButton, gbc);
+
+        gbc.gridy = 3;
+        formPanel.add(checkResultLabel, gbc);
+
+        gbc.gridy = 4;
+        formPanel.add(passwordLabel, gbc);
+
+        gbc.gridy = 5;
+        formPanel.add(registerPasswordField, gbc);
+
+        gbc.gridy = 6;
+        formPanel.add(nameLabel, gbc);
+
+        gbc.gridy = 7;
+        formPanel.add(nameField, gbc);
+
+        JButton registerButton = createPrimaryButton("가입하기");
+        JButton cancelButton = createOutlineButton("취소");
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(registerButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(formPanel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.add(panel);
+
+        checkButton.addActionListener(e -> {
+            String userId = registerIdField.getText().trim();
+
+            if (userId.isEmpty()) {
+                checkResultLabel.setText("아이디를 입력해주세요.");
+                checkResultLabel.setForeground(new Color(190, 70, 70));
+                checked[0] = false;
+                return;
+            }
+
+            if (!userId.matches("^[a-z0-9]{4,12}$")) {
+                checkResultLabel.setText("아이디는 영문 소문자와 숫자 4~12자만 가능합니다.");
+                checkResultLabel.setForeground(new Color(190, 70, 70));
+                checked[0] = false;
+                return;
+            }
+
+            if (context.userManager.isDuplicateId(userId)) {
+                checkResultLabel.setText("이미 사용 중인 아이디입니다.");
+                checkResultLabel.setForeground(new Color(190, 70, 70));
+                checked[0] = false;
+            } else {
+                checkResultLabel.setText("사용 가능한 아이디입니다.");
+                checkResultLabel.setForeground(new Color(40, 130, 80));
+                checked[0] = true;
+                checkedId[0] = userId;
+            }
+        });
+
+        registerIdField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                resetCheck();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                resetCheck();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                resetCheck();
+            }
+
+            private void resetCheck() {
+                checked[0] = false;
+                checkedId[0] = "";
+                checkResultLabel.setText("아이디 중복 확인을 해주세요.");
+                checkResultLabel.setForeground(SUB_TEXT_COLOR);
+            }
+        });
+
+        registerButton.addActionListener(e -> {
+            String userId = registerIdField.getText().trim();
+            String password = new String(registerPasswordField.getPassword()).trim();
+            String name = nameField.getText().trim();
+
+            if (userId.isEmpty() || password.isEmpty() || name.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "모든 항목을 입력해주세요.");
+                return;
+            }
+
+            if (!userId.matches("^[a-z0-9]{4,12}$")) {
+                JOptionPane.showMessageDialog(dialog, "아이디는 영문 소문자와 숫자 4~12자만 가능합니다.");
+                return;
+            }
+
+            if (!checked[0] || !checkedId[0].equalsIgnoreCase(userId)) {
+                JOptionPane.showMessageDialog(dialog, "아이디 중복 확인을 먼저 해주세요.");
+                return;
+            }
+
+            boolean result = context.userManager.registerUser(userId, password, name);
+
+            if (result) {
+                context.saveAll();
+
+                idField.setText(userId);
+                passwordField.setText(password);
+
+                JOptionPane.showMessageDialog(dialog, "회원가입이 완료되었습니다.");
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "이미 사용 중인 아이디입니다.");
+            }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.setVisible(true);
     }
 }

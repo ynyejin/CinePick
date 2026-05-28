@@ -66,6 +66,7 @@ public class UserMainFrame extends JFrame {
         JButton movieButton = createSideButton("영화 예매");
         JButton screeningButton = createSideButton("상영 정보");
         JButton myReservationButton = createSideButton("예매 내역");
+        JButton withdrawButton = createSideButton("회원 탈퇴");
         JButton logoutButton = createSideButton("로그아웃");
 
         sidePanel.add(movieButton);
@@ -73,6 +74,8 @@ public class UserMainFrame extends JFrame {
         sidePanel.add(screeningButton);
         sidePanel.add(Box.createVerticalStrut(10));
         sidePanel.add(myReservationButton);
+        sidePanel.add(Box.createVerticalStrut(10));
+        sidePanel.add(withdrawButton);
         sidePanel.add(Box.createVerticalGlue());
         sidePanel.add(logoutButton);
 
@@ -90,6 +93,7 @@ public class UserMainFrame extends JFrame {
         movieButton.addActionListener(e -> showMovieCards());
         screeningButton.addActionListener(e -> showScreeningTable());
         myReservationButton.addActionListener(e -> showReservationTable());
+        withdrawButton.addActionListener(e -> withdrawUser());
 
         logoutButton.addActionListener(e -> {
             context.saveAll();
@@ -424,5 +428,50 @@ public class UserMainFrame extends JFrame {
     public void refreshUserInfo() {
         welcomeLabel.setText(loginUser.getName() + "님 환영합니다  |  보유 포인트: " + loginUser.getPoint());
         showReservationTable();
+    }
+
+    private void withdrawUser() {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "회원 탈퇴를 진행하시겠습니까?\n탈퇴 시 계정 정보가 삭제되며, 진행 중인 예매는 취소 처리됩니다.",
+                "회원 탈퇴 확인",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String password = JOptionPane.showInputDialog(this, "비밀번호를 입력하세요.");
+
+        if (password == null || password.trim().isEmpty()) {
+            return;
+        }
+
+        if (!loginUser.getPassword().equals(password.trim())) {
+            JOptionPane.showMessageDialog(this, "비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        ArrayList<Reservation> reservations =
+                context.reservationManager.getReservationsByUserId(loginUser.getUserId());
+
+        for (Reservation reservation : reservations) {
+            if (!reservation.getStatus().equalsIgnoreCase("CANCELED")) {
+                context.reservationManager.cancelReservation(reservation.getReservationId());
+            }
+        }
+
+        boolean result = context.userManager.deleteUser(loginUser.getUserId());
+
+        if (result) {
+            context.saveAll();
+
+            JOptionPane.showMessageDialog(this, "회원 탈퇴가 완료되었습니다.");
+            new LoginFrame(context).setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "회원 탈퇴에 실패했습니다.");
+        }
     }
 }

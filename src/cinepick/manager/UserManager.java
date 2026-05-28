@@ -29,7 +29,7 @@ public class UserManager {
     // 아이디 중복 검사
     public boolean isDuplicateId(String userId) {
         for (User user : users) {
-            if (user.getUserId().equals(userId)) {
+            if (user.getUserId().equalsIgnoreCase(userId)) {
                 return true;
             }
         }
@@ -39,7 +39,8 @@ public class UserManager {
     // 로그인
     public User login(String userId, String password) {
         for (User user : users) {
-            if (user.getUserId().equals(userId) && user.getPassword().equals(password)) {
+            if (user.getUserId().equalsIgnoreCase(userId) &&
+                    user.getPassword().equals(password)) {
                 return user;
             }
         }
@@ -76,5 +77,21 @@ public class UserManager {
     public void replaceUsers(ArrayList<User> loadedUsers) {
         users.clear();
         users.addAll(loadedUsers);
+    }
+
+    // 회원 삭제
+    public boolean deleteUser(String userId) {
+        User user = findUserById(userId);
+
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
+            return false;
+        }
+
+        users.remove(user);
+        return true;
     }
 }
