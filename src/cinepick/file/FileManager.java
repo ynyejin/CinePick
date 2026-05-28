@@ -145,7 +145,10 @@ public class FileManager {
                                 movie.getTitle() + "|" +
                                 movie.getGenre() + "|" +
                                 movie.getRunningTime() + "|" +
-                                movie.getRating()
+                                movie.getRating() + "|" +
+                                movie.getDirector() + "|" +
+                                movie.getActors() + "|" +
+                                movie.getDescription()
                 );
             }
         } catch (IOException e) {
@@ -177,7 +180,11 @@ public class FileManager {
                 int runningTime = Integer.parseInt(data[3]);
                 double rating = Double.parseDouble(data[4]);
 
-                movies.add(new Movie(movieId, title, genre, runningTime, rating));
+                String director = data.length > 5 ? data[5] : "정보 없음";
+                String actors = data.length > 6 ? data[6] : "정보 없음";
+                String description = data.length > 7 ? data[7] : "정보 없음";
+
+                movies.add(new Movie(movieId, title, genre, runningTime, rating, director, actors, description));
             }
         } catch (IOException | NumberFormatException e) {
             System.out.println("영화 정보 불러오기 중 오류가 발생했습니다.");

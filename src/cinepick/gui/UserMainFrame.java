@@ -171,40 +171,40 @@ public class UserMainFrame extends JFrame {
         card.setBackground(CARD_COLOR);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(220, 225, 235)),
-                BorderFactory.createEmptyBorder(18, 18, 18, 18)
+                BorderFactory.createEmptyBorder(16, 16, 16, 16)
         ));
 
+        // 포스터 이미지 자리
         JLabel posterLabel = new JLabel("MOVIE", SwingConstants.CENTER);
         posterLabel.setOpaque(true);
         posterLabel.setBackground(new Color(230, 233, 242));
         posterLabel.setForeground(new Color(80, 85, 100));
         posterLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
-        posterLabel.setPreferredSize(new Dimension(160, 120));
+        posterLabel.setPreferredSize(new Dimension(160, 140));
 
-        JLabel titleLabel = new JLabel(movie.getTitle());
+        // 영화 제목만 카드에 표시
+        JLabel titleLabel = new JLabel(movie.getTitle(), SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
         titleLabel.setForeground(TEXT_COLOR);
 
-        JLabel infoLabel = new JLabel(
-                "<html>장르: " + movie.getGenre() +
-                        "<br>상영시간: " + movie.getRunningTime() + "분" +
-                        "<br>평점: " + movie.getRating() +
-                        "</html>"
-        );
-        infoLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-        infoLabel.setForeground(new Color(90, 90, 90));
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
+        centerPanel.setOpaque(false);
+        centerPanel.add(posterLabel, BorderLayout.CENTER);
+        centerPanel.add(titleLabel, BorderLayout.SOUTH);
 
+        JButton detailButton = createPrimaryButton("상세보기");
         JButton reserveButton = createPrimaryButton("예매하기");
+
+        detailButton.addActionListener(e -> showMovieDetail(movie));
         reserveButton.addActionListener(e -> chooseScreeningForMovie(movie));
 
-        JPanel textPanel = new JPanel(new GridLayout(2, 1, 0, 6));
-        textPanel.setOpaque(false);
-        textPanel.add(titleLabel);
-        textPanel.add(infoLabel);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 8, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(detailButton);
+        buttonPanel.add(reserveButton);
 
-        card.add(posterLabel, BorderLayout.NORTH);
-        card.add(textPanel, BorderLayout.CENTER);
-        card.add(reserveButton, BorderLayout.SOUTH);
+        card.add(centerPanel, BorderLayout.CENTER);
+        card.add(buttonPanel, BorderLayout.SOUTH);
 
         return card;
     }
@@ -473,5 +473,21 @@ public class UserMainFrame extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "회원 탈퇴에 실패했습니다.");
         }
+
+    }
+
+    private void showMovieDetail(Movie movie) {
+        JOptionPane.showMessageDialog(
+                this,
+                "제목: " + movie.getTitle() + "\n" +
+                        "장르: " + movie.getGenre() + "\n" +
+                        "상영시간: " + movie.getRunningTime() + "분\n" +
+                        "평점: " + movie.getRating() + "\n" +
+                        "감독: " + movie.getDirector() + "\n" +
+                        "출연 배우: " + movie.getActors() + "\n\n" +
+                        "소개:\n" + movie.getDescription(),
+                "영화 상세 정보",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 }

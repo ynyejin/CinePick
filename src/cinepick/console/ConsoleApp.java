@@ -370,7 +370,24 @@ public class ConsoleApp {
         int runningTime = readInt("상영 시간(분): ");
         double rating = readDouble("평점: ");
 
-        Movie movie = movieManager.addMovie(title, genre, runningTime, rating);
+        System.out.print("감독: ");
+        String director = scanner.nextLine();
+
+        System.out.print("출연 배우: ");
+        String actors = scanner.nextLine();
+
+        System.out.print("영화 소개: ");
+        String description = scanner.nextLine();
+
+        Movie movie = movieManager.addMovie(
+                title,
+                genre,
+                runningTime,
+                rating,
+                director,
+                actors,
+                description
+        );
 
         System.out.println("영화가 등록되었습니다.");
         System.out.println(movie);
@@ -399,7 +416,25 @@ public class ConsoleApp {
         int runningTime = readInt("새 상영 시간(분): ");
         double rating = readDouble("새 평점: ");
 
-        boolean result = movieManager.updateMovie(movieId, title, genre, runningTime, rating);
+        System.out.print("새 감독: ");
+        String director = scanner.nextLine();
+
+        System.out.print("새 출연 배우: ");
+        String actors = scanner.nextLine();
+
+        System.out.print("새 영화 소개: ");
+        String description = scanner.nextLine();
+
+        boolean result = movieManager.updateMovie(
+                movieId,
+                title,
+                genre,
+                runningTime,
+                rating,
+                director,
+                actors,
+                description
+        );
 
         if (result) {
             System.out.println("영화 정보가 수정되었습니다.");

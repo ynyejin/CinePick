@@ -230,11 +230,28 @@ public class AdminFrame extends JFrame {
         String ratingText = JOptionPane.showInputDialog(this, "평점:");
         if (ratingText == null || ratingText.trim().isEmpty()) return;
 
+        String director = JOptionPane.showInputDialog(this, "감독:");
+        if (director == null || director.trim().isEmpty()) return;
+
+        String actors = JOptionPane.showInputDialog(this, "출연 배우:");
+        if (actors == null || actors.trim().isEmpty()) return;
+
+        String description = JOptionPane.showInputDialog(this, "영화 소개:");
+        if (description == null || description.trim().isEmpty()) return;
+
         try {
             int runningTime = Integer.parseInt(runningTimeText.trim());
             double rating = Double.parseDouble(ratingText.trim());
 
-            context.movieManager.addMovie(title.trim(), genre.trim(), runningTime, rating);
+            context.movieManager.addMovie(
+                    title.trim(),
+                    genre.trim(),
+                    runningTime,
+                    rating,
+                    director.trim(),
+                    actors.trim(),
+                    description.trim()
+            );
             context.saveAll();
 
             JOptionPane.showMessageDialog(this, "영화가 등록되었습니다.");
@@ -272,11 +289,29 @@ public class AdminFrame extends JFrame {
         String ratingText = JOptionPane.showInputDialog(this, "새 평점:", movie.getRating());
         if (ratingText == null || ratingText.trim().isEmpty()) return;
 
+        String director = JOptionPane.showInputDialog(this, "새 감독:", movie.getDirector());
+        if (director == null || director.trim().isEmpty()) return;
+
+        String actors = JOptionPane.showInputDialog(this, "새 출연 배우:", movie.getActors());
+        if (actors == null || actors.trim().isEmpty()) return;
+
+        String description = JOptionPane.showInputDialog(this, "새 영화 소개:", movie.getDescription());
+        if (description == null || description.trim().isEmpty()) return;
+
         try {
             int runningTime = Integer.parseInt(runningTimeText.trim());
             double rating = Double.parseDouble(ratingText.trim());
 
-            context.movieManager.updateMovie(movieId, title.trim(), genre.trim(), runningTime, rating);
+            context.movieManager.updateMovie(
+                    movieId,
+                    title.trim(),
+                    genre.trim(),
+                    runningTime,
+                    rating,
+                    director.trim(),
+                    actors.trim(),
+                    description.trim()
+            );
             context.saveAll();
 
             JOptionPane.showMessageDialog(this, "영화 정보가 수정되었습니다.");

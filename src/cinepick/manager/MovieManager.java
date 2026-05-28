@@ -13,14 +13,23 @@ public class MovieManager {
         nextMovieId = 1;
 
         // 테스트용 기본 영화 데이터
-        addMovie("인사이드 아웃2", "애니메이션", 96, 4.8);
-        addMovie("범죄도시4", "액션", 109, 4.5);
-        addMovie("듄: 파트2", "SF", 166, 4.7);
+        addMovie("인사이드 아웃2", "애니메이션", 96, 4.8,
+                "켈시 만", "에이미 포엘러, 마야 호크",
+                "사춘기에 접어든 라일리의 머릿속에서 새로운 감정들이 등장하며 벌어지는 이야기");
+
+        addMovie("범죄도시4", "액션", 109, 4.5,
+                "허명행", "마동석, 김무열, 박지환",
+                "괴물형사 마석도가 온라인 불법 도박 조직을 추적하며 벌어지는 범죄 액션 영화");
+
+        addMovie("듄: 파트2", "SF", 166, 4.7,
+                "드니 빌뇌브", "티모시 샬라메, 젠데이아",
+                "폴 아트레이데스가 자신의 운명을 받아들이고 거대한 전쟁에 휘말리는 이야기");
     }
 
     // 영화 추가
-    public Movie addMovie(String title, String genre, int runningTime, double rating) {
-        Movie movie = new Movie(nextMovieId++, title, genre, runningTime, rating);
+    public Movie addMovie(String title, String genre, int runningTime, double rating,
+                          String director, String actors, String description) {
+        Movie movie = new Movie(nextMovieId++, title, genre, runningTime, rating, director, actors, description);
         movies.add(movie);
         return movie;
     }
@@ -38,7 +47,8 @@ public class MovieManager {
     }
 
     // 영화 수정
-    public boolean updateMovie(int movieId, String title, String genre, int runningTime, double rating) {
+    public boolean updateMovie(int movieId, String title, String genre, int runningTime, double rating,
+                               String director, String actors, String description) {
         Movie movie = findMovieById(movieId);
 
         if (movie == null) {
@@ -49,6 +59,9 @@ public class MovieManager {
         movie.setGenre(genre);
         movie.setRunningTime(runningTime);
         movie.setRating(rating);
+        movie.setDirector(director);
+        movie.setActors(actors);
+        movie.setDescription(description);
 
         return true;
     }
