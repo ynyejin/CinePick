@@ -125,6 +125,19 @@ public class AdminFrame extends JFrame {
         return button;
     }
 
+    private void styleFormLabel(JLabel label) {
+        label.setFont(new Font("SansSerif", Font.BOLD, 13));
+        label.setForeground(TEXT_COLOR);
+    }
+
+    private void styleTextField(JTextField field) {
+        field.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(210, 215, 225)),
+                BorderFactory.createEmptyBorder(7, 9, 7, 9)
+        ));
+    }
+
     private JButton createDangerButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -218,47 +231,174 @@ public class AdminFrame extends JFrame {
     }
 
     private void addMovie() {
-        String title = JOptionPane.showInputDialog(this, "영화 제목:");
-        if (title == null || title.trim().isEmpty()) return;
+        JDialog dialog = new JDialog(this, "영화 등록", true);
+        dialog.setSize(500, 650);
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
 
-        String genre = JOptionPane.showInputDialog(this, "장르:");
-        if (genre == null || genre.trim().isEmpty()) return;
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BACKGROUND_COLOR);
+        panel.setBorder(BorderFactory.createEmptyBorder(24, 28, 24, 28));
 
-        String runningTimeText = JOptionPane.showInputDialog(this, "상영 시간(분):");
-        if (runningTimeText == null || runningTimeText.trim().isEmpty()) return;
+        JLabel titleLabel = new JLabel("영화 등록");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(TEXT_COLOR);
 
-        String ratingText = JOptionPane.showInputDialog(this, "평점:");
-        if (ratingText == null || ratingText.trim().isEmpty()) return;
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(BACKGROUND_COLOR);
 
-        String director = JOptionPane.showInputDialog(this, "감독:");
-        if (director == null || director.trim().isEmpty()) return;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 0, 6, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
 
-        String actors = JOptionPane.showInputDialog(this, "출연 배우:");
-        if (actors == null || actors.trim().isEmpty()) return;
+        JLabel titleInputLabel = new JLabel("영화 제목");
+        JTextField titleField = new JTextField();
 
-        String description = JOptionPane.showInputDialog(this, "영화 소개:");
-        if (description == null || description.trim().isEmpty()) return;
+        JLabel genreLabel = new JLabel("장르");
+        JTextField genreField = new JTextField();
 
-        try {
-            int runningTime = Integer.parseInt(runningTimeText.trim());
-            double rating = Double.parseDouble(ratingText.trim());
+        JLabel runningTimeLabel = new JLabel("상영 시간(분)");
+        JTextField runningTimeField = new JTextField();
 
-            context.movieManager.addMovie(
-                    title.trim(),
-                    genre.trim(),
-                    runningTime,
-                    rating,
-                    director.trim(),
-                    actors.trim(),
-                    description.trim()
-            );
-            context.saveAll();
+        JLabel ratingLabel = new JLabel("평점");
+        JTextField ratingField = new JTextField();
 
-            JOptionPane.showMessageDialog(this, "영화가 등록되었습니다.");
-            showMovieManagementPanel();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "상영 시간과 평점은 숫자로 입력해주세요.");
-        }
+        JLabel directorLabel = new JLabel("감독");
+        JTextField directorField = new JTextField();
+
+        JLabel actorsLabel = new JLabel("출연 배우");
+        JTextField actorsField = new JTextField();
+
+        JLabel descriptionLabel = new JLabel("영화 소개");
+        JTextArea descriptionArea = new JTextArea();
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setRows(4);
+        descriptionArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        descriptionArea.setBorder(BorderFactory.createEmptyBorder(8, 9, 8, 9));
+
+        JScrollPane descriptionScrollPane = new JScrollPane(descriptionArea);
+        descriptionScrollPane.setBorder(BorderFactory.createLineBorder(new Color(210, 215, 225)));
+
+        styleFormLabel(titleInputLabel);
+        styleFormLabel(genreLabel);
+        styleFormLabel(runningTimeLabel);
+        styleFormLabel(ratingLabel);
+        styleFormLabel(directorLabel);
+        styleFormLabel(actorsLabel);
+        styleFormLabel(descriptionLabel);
+
+        styleTextField(titleField);
+        styleTextField(genreField);
+        styleTextField(runningTimeField);
+        styleTextField(ratingField);
+        styleTextField(directorField);
+        styleTextField(actorsField);
+
+        gbc.gridy = 0;
+        formPanel.add(titleInputLabel, gbc);
+        gbc.gridy = 1;
+        formPanel.add(titleField, gbc);
+
+        gbc.gridy = 2;
+        formPanel.add(genreLabel, gbc);
+        gbc.gridy = 3;
+        formPanel.add(genreField, gbc);
+
+        gbc.gridy = 4;
+        formPanel.add(runningTimeLabel, gbc);
+        gbc.gridy = 5;
+        formPanel.add(runningTimeField, gbc);
+
+        gbc.gridy = 6;
+        formPanel.add(ratingLabel, gbc);
+        gbc.gridy = 7;
+        formPanel.add(ratingField, gbc);
+
+        gbc.gridy = 8;
+        formPanel.add(directorLabel, gbc);
+        gbc.gridy = 9;
+        formPanel.add(directorField, gbc);
+
+        gbc.gridy = 10;
+        formPanel.add(actorsLabel, gbc);
+        gbc.gridy = 11;
+        formPanel.add(actorsField, gbc);
+
+        gbc.gridy = 12;
+        formPanel.add(descriptionLabel, gbc);
+        gbc.gridy = 13;
+        formPanel.add(descriptionScrollPane, gbc);
+
+        JButton saveButton = createPrimaryButton("등록");
+        JButton cancelButton = createDangerButton("취소");
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(formPanel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.add(panel);
+
+        saveButton.addActionListener(e -> {
+            String title = titleField.getText().trim();
+            String genre = genreField.getText().trim();
+            String runningTimeText = runningTimeField.getText().trim();
+            String ratingText = ratingField.getText().trim();
+            String director = directorField.getText().trim();
+            String actors = actorsField.getText().trim();
+            String description = descriptionArea.getText().trim();
+
+            if (title.isEmpty() || genre.isEmpty() || runningTimeText.isEmpty() ||
+                    ratingText.isEmpty() || director.isEmpty() || actors.isEmpty() || description.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "모든 항목을 입력해주세요.");
+                return;
+            }
+
+            try {
+                int runningTime = Integer.parseInt(runningTimeText);
+                double rating = Double.parseDouble(ratingText);
+
+                if (runningTime <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "상영 시간은 1분 이상이어야 합니다.");
+                    return;
+                }
+
+                if (rating < 0 || rating > 5) {
+                    JOptionPane.showMessageDialog(dialog, "평점은 0점 이상 5점 이하로 입력해주세요.");
+                    return;
+                }
+
+                context.movieManager.addMovie(
+                        title,
+                        genre,
+                        runningTime,
+                        rating,
+                        director,
+                        actors,
+                        description
+                );
+
+                context.saveAll();
+
+                JOptionPane.showMessageDialog(dialog, "영화가 등록되었습니다.");
+                dialog.dispose();
+                showMovieManagementPanel();
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "상영 시간과 평점은 숫자로 입력해주세요.");
+            }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.setVisible(true);
     }
 
     private void updateSelectedMovie(JTable table) {
@@ -277,48 +417,183 @@ public class AdminFrame extends JFrame {
             return;
         }
 
-        String title = JOptionPane.showInputDialog(this, "새 영화 제목:", movie.getTitle());
-        if (title == null || title.trim().isEmpty()) return;
+        JDialog dialog = new JDialog(this, "영화 정보 수정", true);
+        dialog.setSize(500, 650);
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
 
-        String genre = JOptionPane.showInputDialog(this, "새 장르:", movie.getGenre());
-        if (genre == null || genre.trim().isEmpty()) return;
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BACKGROUND_COLOR);
+        panel.setBorder(BorderFactory.createEmptyBorder(24, 28, 24, 28));
 
-        String runningTimeText = JOptionPane.showInputDialog(this, "새 상영 시간(분):", movie.getRunningTime());
-        if (runningTimeText == null || runningTimeText.trim().isEmpty()) return;
+        JLabel titleLabel = new JLabel("영화 정보 수정");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(TEXT_COLOR);
 
-        String ratingText = JOptionPane.showInputDialog(this, "새 평점:", movie.getRating());
-        if (ratingText == null || ratingText.trim().isEmpty()) return;
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(BACKGROUND_COLOR);
 
-        String director = JOptionPane.showInputDialog(this, "새 감독:", movie.getDirector());
-        if (director == null || director.trim().isEmpty()) return;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 0, 6, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
 
-        String actors = JOptionPane.showInputDialog(this, "새 출연 배우:", movie.getActors());
-        if (actors == null || actors.trim().isEmpty()) return;
+        JLabel movieIdLabel = new JLabel("영화 번호: " + movie.getMovieId());
+        movieIdLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
+        movieIdLabel.setForeground(TEXT_COLOR);
 
-        String description = JOptionPane.showInputDialog(this, "새 영화 소개:", movie.getDescription());
-        if (description == null || description.trim().isEmpty()) return;
+        JLabel titleInputLabel = new JLabel("영화 제목");
+        JTextField titleField = new JTextField(movie.getTitle());
 
-        try {
-            int runningTime = Integer.parseInt(runningTimeText.trim());
-            double rating = Double.parseDouble(ratingText.trim());
+        JLabel genreLabel = new JLabel("장르");
+        JTextField genreField = new JTextField(movie.getGenre());
 
-            context.movieManager.updateMovie(
-                    movieId,
-                    title.trim(),
-                    genre.trim(),
-                    runningTime,
-                    rating,
-                    director.trim(),
-                    actors.trim(),
-                    description.trim()
-            );
-            context.saveAll();
+        JLabel runningTimeLabel = new JLabel("상영 시간(분)");
+        JTextField runningTimeField = new JTextField(String.valueOf(movie.getRunningTime()));
 
-            JOptionPane.showMessageDialog(this, "영화 정보가 수정되었습니다.");
-            showMovieManagementPanel();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "상영 시간과 평점은 숫자로 입력해주세요.");
-        }
+        JLabel ratingLabel = new JLabel("평점");
+        JTextField ratingField = new JTextField(String.valueOf(movie.getRating()));
+
+        JLabel directorLabel = new JLabel("감독");
+        JTextField directorField = new JTextField(movie.getDirector());
+
+        JLabel actorsLabel = new JLabel("출연 배우");
+        JTextField actorsField = new JTextField(movie.getActors());
+
+        JLabel descriptionLabel = new JLabel("영화 소개");
+        JTextArea descriptionArea = new JTextArea(movie.getDescription());
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setRows(4);
+
+        JScrollPane descriptionScrollPane = new JScrollPane(descriptionArea);
+        descriptionScrollPane.setBorder(BorderFactory.createLineBorder(new Color(210, 215, 225)));
+
+        styleFormLabel(titleInputLabel);
+        styleFormLabel(genreLabel);
+        styleFormLabel(runningTimeLabel);
+        styleFormLabel(ratingLabel);
+        styleFormLabel(directorLabel);
+        styleFormLabel(actorsLabel);
+        styleFormLabel(descriptionLabel);
+
+        styleTextField(titleField);
+        styleTextField(genreField);
+        styleTextField(runningTimeField);
+        styleTextField(ratingField);
+        styleTextField(directorField);
+        styleTextField(actorsField);
+
+        gbc.gridy = 0;
+        formPanel.add(movieIdLabel, gbc);
+
+        gbc.gridy = 1;
+        formPanel.add(titleInputLabel, gbc);
+        gbc.gridy = 2;
+        formPanel.add(titleField, gbc);
+
+        gbc.gridy = 3;
+        formPanel.add(genreLabel, gbc);
+        gbc.gridy = 4;
+        formPanel.add(genreField, gbc);
+
+        gbc.gridy = 5;
+        formPanel.add(runningTimeLabel, gbc);
+        gbc.gridy = 6;
+        formPanel.add(runningTimeField, gbc);
+
+        gbc.gridy = 7;
+        formPanel.add(ratingLabel, gbc);
+        gbc.gridy = 8;
+        formPanel.add(ratingField, gbc);
+
+        gbc.gridy = 9;
+        formPanel.add(directorLabel, gbc);
+        gbc.gridy = 10;
+        formPanel.add(directorField, gbc);
+
+        gbc.gridy = 11;
+        formPanel.add(actorsLabel, gbc);
+        gbc.gridy = 12;
+        formPanel.add(actorsField, gbc);
+
+        gbc.gridy = 13;
+        formPanel.add(descriptionLabel, gbc);
+        gbc.gridy = 14;
+        formPanel.add(descriptionScrollPane, gbc);
+
+        JButton saveButton = createPrimaryButton("저장");
+        JButton cancelButton = createDangerButton("취소");
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(formPanel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.add(panel);
+
+        saveButton.addActionListener(e -> {
+            String title = titleField.getText().trim();
+            String genre = genreField.getText().trim();
+            String runningTimeText = runningTimeField.getText().trim();
+            String ratingText = ratingField.getText().trim();
+            String director = directorField.getText().trim();
+            String actors = actorsField.getText().trim();
+            String description = descriptionArea.getText().trim();
+
+            if (title.isEmpty() || genre.isEmpty() || runningTimeText.isEmpty() ||
+                    ratingText.isEmpty() || director.isEmpty() || actors.isEmpty() || description.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "모든 항목을 입력해주세요.");
+                return;
+            }
+
+            try {
+                int runningTime = Integer.parseInt(runningTimeText);
+                double rating = Double.parseDouble(ratingText);
+
+                if (runningTime <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "상영 시간은 1분 이상이어야 합니다.");
+                    return;
+                }
+
+                if (rating < 0 || rating > 5) {
+                    JOptionPane.showMessageDialog(dialog, "평점은 0점 이상 5점 이하로 입력해주세요.");
+                    return;
+                }
+
+                boolean result = context.movieManager.updateMovie(
+                        movieId,
+                        title,
+                        genre,
+                        runningTime,
+                        rating,
+                        director,
+                        actors,
+                        description
+                );
+
+                if (result) {
+                    context.saveAll();
+                    JOptionPane.showMessageDialog(dialog, "영화 정보가 수정되었습니다.");
+                    dialog.dispose();
+                    showMovieManagementPanel();
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "영화 수정에 실패했습니다.");
+                }
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "상영 시간과 평점은 숫자로 입력해주세요.");
+            }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.setVisible(true);
     }
 
     private void deleteSelectedMovie(JTable table) {
