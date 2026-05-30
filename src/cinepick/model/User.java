@@ -6,6 +6,7 @@ public class User {
     private String name;
     private int point;
     private String role; // USER 또는 ADMIN
+    private boolean employee;
 
     public User(String userId, String password, String name, int point, String role) {
         this.userId = userId;
@@ -13,6 +14,16 @@ public class User {
         this.name = name;
         this.point = point;
         this.role = role;
+        this.employee = false;
+    }
+
+    public User(String userId, String password, String name, int point, String role, boolean employee) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.point = point;
+        this.role = role;
+        this.employee = employee;
     }
 
     public String getUserId() {
@@ -61,6 +72,10 @@ public class User {
 
     public String getMembershipGrade() {
         if (role.equalsIgnoreCase("ADMIN")) {
+            return "ADMIN";
+        }
+
+        if (employee) {
             return "STAFF";
         }
 
@@ -73,8 +88,9 @@ public class User {
         }
     }
 
+
     public int getDiscountRate() {
-        if (role.equalsIgnoreCase("ADMIN")) {
+        if (employee) {
             return 20;
         }
 
@@ -93,6 +109,14 @@ public class User {
         if (this.point < 0) {
             this.point = 0;
         }
+    }
+
+    public boolean isEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(boolean employee) {
+        this.employee = employee;
     }
 
     @Override

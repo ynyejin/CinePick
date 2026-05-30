@@ -109,4 +109,19 @@ public class UserManager {
         user.setPoint(point);
         return true;
     }
+
+    public boolean updateEmployeeStatus(String userId, boolean employee) {
+        User user = findUserById(userId);
+
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
+            return false;
+        }
+
+        user.setEmployee(employee);
+        return true;
+    }
 }

@@ -92,7 +92,8 @@ public class FileManager {
                                 user.getPassword() + "|" +
                                 user.getName() + "|" +
                                 user.getPoint() + "|" +
-                                user.getRole()
+                                user.getRole() + "|" +
+                                user.isEmployee()
                 );
             }
         } catch (IOException e) {
@@ -123,11 +124,12 @@ public class FileManager {
                 String name = data[2];
                 int point = Integer.parseInt(data[3]);
                 String role = data[4];
+                boolean employee = data.length > 5 && Boolean.parseBoolean(data[5]);
 
                 if (role.equals("ADMIN")) {
                     users.add(new Admin(userId, password, name, point, "ADMIN_CODE"));
                 } else {
-                    users.add(new User(userId, password, name, point, role));
+                    users.add(new User(userId, password, name, point, role, employee));
                 }
             }
         } catch (IOException | NumberFormatException e) {

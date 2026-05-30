@@ -735,7 +735,7 @@ public class AdminFrame extends JFrame {
         pageTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
         pageTitle.setForeground(TEXT_COLOR);
 
-        String[] columns = {"아이디", "이름", "멤버십 등급", "포인트", "할인율", "권한"};
+        String[] columns = {"아이디", "이름", "직원 여부", "멤버십 등급", "포인트", "할인율", "권한"};
 
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
@@ -748,6 +748,7 @@ public class AdminFrame extends JFrame {
             model.addRow(new Object[]{
                     user.getUserId(),
                     user.getName(),
+                    user.isEmployee() ? "직원" : "일반",
                     user.getMembershipGrade(),
                     user.getPoint(),
                     user.getDiscountRate() + "%",
@@ -759,10 +760,12 @@ public class AdminFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JButton updatePointButton = createPrimaryButton("포인트 수정");
+        JButton updateEmployeeButton = createPrimaryButton("직원 여부 변경");
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         buttonPanel.setBackground(BACKGROUND_COLOR);
         buttonPanel.add(updatePointButton);
+        buttonPanel.add(updateEmployeeButton);
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(BACKGROUND_COLOR);
@@ -775,6 +778,7 @@ public class AdminFrame extends JFrame {
         setContent(panel);
 
         updatePointButton.addActionListener(e -> updateSelectedUserPoint(table));
+        updateEmployeeButton.addActionListener(e -> updateSelectedUserEmployee(table));
     }
 
     // =========================
@@ -835,7 +839,7 @@ public class AdminFrame extends JFrame {
         }
 
         String userId = (String) table.getValueAt(selectedRow, 0);
-        String role = (String) table.getValueAt(selectedRow, 5);
+        String role = (String) table.getValueAt(selectedRow, 6);
 
         if (role.equalsIgnoreCase("ADMIN")) {
             JOptionPane.showMessageDialog(this, "관리자 계정의 포인트는 수정할 수 없습니다.");
@@ -867,6 +871,52 @@ public class AdminFrame extends JFrame {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "포인트는 숫자로 입력해주세요.");
+        }
+    }
+
+    private void updateSelectedUserEmployee(JTable table) {
+        int selectedRow = table.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "직원 여부를 변경할 회원을 선택해주세요.");
+            return;
+        }
+
+        String userId = (String) table.getValueAt(selectedRow, 0);
+        String currentEmployeeStatus = (String) table.getValueAt(selectedRow, 2);
+        String role = (String) table.getValueAt(selectedRow, 6);
+
+        if (role.equalsIgnoreCase("ADMIN")) {
+            JOptionPane.showMessageDialog(this, "관리자 계정은 직원 여부를 변경할 수 없습니다.");
+            return;
+        }
+
+        boolean currentEmployee = currentEmployeeStatus.equals("직원");
+        boolean newEmployee = !currentEmployee;
+
+        String message = newEmployee
+                ? userId + " 회원을 직원으로 설정하시겠습니까?"
+                : userId + " 회원의 직원 설정을 해제하시겠습니까?";
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                message,
+                "직원 여부 변경",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean result = context.userManager.updateEmployeeStatus(userId, newEmployee);
+
+        if (result) {
+            context.saveAll();
+            JOptionPane.showMessageDialog(this, "직원 여부가 변경되었습니다.");
+            showUserTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "직원 여부 변경에 실패했습니다.");
         }
     }
 }
